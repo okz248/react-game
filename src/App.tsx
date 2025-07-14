@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
 
 //表示テキストリスト
@@ -29,7 +29,15 @@ function App() {
     document.cookie = "page=" + pageNum;
   };
 
+  //「つづきから」ボタン押下時はゲーム画面を表示する
+  useEffect (() => {
+    if(page === "title" && pageNum > 0){
+      setPage("game");
+    }
+  },[pageNum]);
+
   //cookieを取得する
+  //「つづきから」ボタン押下で保存したgameページに遷移
   const continueButton = () => {
     const cookies = document.cookie.split("; ");
     for (let cookie of cookies) {
@@ -40,23 +48,27 @@ function App() {
     }
   };
 
+  //「はじめから」ボタン押下でgame1ページに遷移
   const startButton = () => {
     setPageNum(0);
     setPage("game");
   }
 
+  //「次へ」ボタン押下でページ番号更新
   const nextButton = () => {
     if(pageNum < txtlist.length-1){
       setPageNum(pageNum + 1);
     }
   }
 
+  //「戻る」ボタン押下でページ番号更新
   const backButton = () => {
     if(pageNum > 0){
       setPageNum(pageNum - 1);
     }
   }
 
+  //タイトル画面表示
   if(page === "title"){
     return (
       <>
@@ -74,6 +86,7 @@ function App() {
     );
   }
 
+  //ゲーム画面表示
   return (
     <>
       <div>
