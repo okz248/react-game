@@ -1,7 +1,9 @@
 import type { FC } from "react";
 
+type PageType = "title" | "game";
+
 type Props = {
-    page: string;
+    page: PageType;
     startButton?: () => void;
     continueButton?: () => void;
     nextButton?: () => void;
