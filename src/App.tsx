@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react'
 import './App.css'
+import { Image } from './components/Image';
+import { Message } from './components/Message';
+import { Navi } from './components/Navi';
 
 //表示テキストリスト
 const txtlist = [
@@ -81,8 +84,7 @@ function App() {
           </ul>
         </div>
         <div>
-          <button onClick={startButton}>はじめから</button>
-          <button onClick={continueButton}>つづきから</button>
+          <Navi page={page} startButton={startButton} continueButton={continueButton} />
         </div>
       </>
     );
@@ -92,14 +94,12 @@ function App() {
   return (
     <>
       <div>
-        <img src={imglist[pageNum]} />
+        <Image pageNum={pageNum} imglist={imglist} />
         {/* <!-- キャラクター名 --> */}
         <div>いらすとちゃん</div>
         {/* <!-- セリフ --> */}
-        <div>{txtlist[pageNum]}</div>
-        <button onClick={nextButton}>次へ</button>
-        <button onClick={backButton}>戻る</button>
-        <button onClick={saveButton}>セーブ</button>
+        <Message pageNum={pageNum} txtlist={txtlist} />
+        <Navi page={page} nextButton={nextButton} backButton={backButton} saveButton={saveButton}/>
       </div>
     </>
   );
