@@ -23,6 +23,7 @@ const imglist = [
 function App() {
   const [page, setPage] = useState("title");
   const [pageNum, setPageNum] = useState(0);
+  const [flag, setflag] = useState(false);
 
   //cookieを保存する
   const saveButton = () => {
@@ -31,10 +32,10 @@ function App() {
 
   //「つづきから」ボタン押下時はゲーム画面を表示する
   useEffect (() => {
-    if(page === "title" && pageNum > 0){
+    if(page === "title" && flag === true){
       setPage("game");
     }
-  },[pageNum]);
+  },[flag]);
 
   //cookieを取得する
   //「つづきから」ボタン押下で保存したgameページに遷移
@@ -43,6 +44,7 @@ function App() {
     for (let cookie of cookies) {
       const [key, value] = cookie.split("=");
       if (key === "page") {
+        setflag(true);
         setPageNum(parseInt(value));
       }
     }
