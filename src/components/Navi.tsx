@@ -15,16 +15,16 @@ type Props = {
 export const Navi: FC<Props> = (props) => {
     const {page, save, startButton, continueButton, nextButton, backButton, saveButton} = props;
   //ゲーム画面表示
-  if(page === "title" && save){
+  if(page === "title"){
     return (
-        <>
-            <button onClick={startButton}>はじめから</button>
+      <>
+        <button onClick={startButton}>はじめから</button>
+        {
+          save && (
             <button onClick={continueButton}>つづきから</button>
-        </>
-      );
-  }else if(page === "title"){
-    return (
-      <button onClick={startButton}>はじめから</button>
+          )
+        }
+      </>
     );
   }
   return (
