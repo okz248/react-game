@@ -30,7 +30,7 @@ export const Game = () => {
 
     //ボタンで遷移してきたかの判定
     useEffect(() => {
-        if(!location.state || !(location.state as any).fromHome){
+        if(!location.state || !(location.state as any).fromTitle){
             navigate("/title", {replace:true});
         }
     },[location.state, navigate]);
