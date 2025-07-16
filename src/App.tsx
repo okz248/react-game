@@ -26,7 +26,20 @@ const imglist = [
 function App() {
   const [page, setPage] = useState("title");
   const [pageNum, setPageNum] = useState(0);
-  const [flag, setflag] = useState(false);
+  const [flag, setFlag] = useState(false);
+  const [save, setSave] = useState(false);
+
+  //cookieの存在確認
+  //cookieを取得して存在するならsaveをtrueにする
+  useEffect(() => {
+    const cookies = document.cookie.split("; ");
+    for(let cookie of cookies){
+      const [key] = cookie.split("=");
+      if (key === "page"){
+        setSave(true);
+      }
+    }
+  },[]);
 
   //cookieを保存する
   const saveButton = () => {
@@ -47,7 +60,7 @@ function App() {
     for (let cookie of cookies) {
       const [key, value] = cookie.split("=");
       if (key === "page") {
-        setflag(true);
+        setFlag(true);
         setPageNum(parseInt(value));
       }
     }
@@ -84,7 +97,7 @@ function App() {
           </ul>
         </div>
         <div>
-          <Navi page={page} startButton={startButton} continueButton={continueButton} />
+          <Navi page={page} save={save} startButton={startButton} continueButton={continueButton} />
         </div>
       </>
     );
@@ -99,7 +112,7 @@ function App() {
         <div>いらすとちゃん</div>
         {/* <!-- セリフ --> */}
         <Message pageNum={pageNum} txtlist={txtlist} />
-        <Navi page={page} nextButton={nextButton} backButton={backButton} saveButton={saveButton}/>
+        <Navi nextButton={nextButton} backButton={backButton} saveButton={saveButton}/>
       </div>
     </>
   );
