@@ -3,7 +3,8 @@ import type { FC } from "react";
 type PageType = "title" | "game";
 
 type Props = {
-    page: PageType;
+    page?: PageType;
+    save?: boolean;
     startButton?: () => void;
     continueButton?: () => void;
     nextButton?: () => void;
@@ -12,15 +13,19 @@ type Props = {
   };
 
 export const Navi: FC<Props> = (props) => {
-    const {page, startButton, continueButton, nextButton, backButton, saveButton} = props;
+    const {page, save, startButton, continueButton, nextButton, backButton, saveButton} = props;
   //ゲーム画面表示
-  if(page === "title"){
+  if(page === "title" && save){
     return (
         <>
             <button onClick={startButton}>はじめから</button>
             <button onClick={continueButton}>つづきから</button>
         </>
       );
+  }else if(page === "title"){
+    return (
+      <button onClick={startButton}>はじめから</button>
+    );
   }
   return (
     <>
