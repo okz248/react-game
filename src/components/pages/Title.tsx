@@ -24,14 +24,14 @@ export const Title = () => {
     //「つづきから」ボタン押下時はゲーム画面を表示する
     useEffect (() => {
         if(page === "title" && flag === true){
-            navigate('/game');
+            navigate('/game', {state: {fromTitle: true}});
         }
     },[flag]);
 
     //「はじめから」ボタン押下でgame1ページに遷移
     const startButton = () => {
         setPageNum(0);
-        navigate('/game');
+        navigate('/game', {state: {fromTitle: true}});
     };
 
     //cookieを取得する
