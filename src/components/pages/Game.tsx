@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Image } from "../Image";
 import { Message } from "../Message";
 import { Navi } from "../Navi";
@@ -24,6 +24,18 @@ const txtlist = [
 
 export const Game = () => {
     const [pageNum, setPageNum] = useState(0);
+
+    //cookieの存在確認
+    //cookieを取得して存在するならsaveをtrueにする
+    useEffect(() => {
+        const cookies = document.cookie.split("; ");
+        for(let cookie of cookies){
+            const [key, value] = cookie.split("=");
+            if (key === "page"){
+                setPageNum(parseInt(value));
+            }
+        }
+    },[]);
 
     //cookieを保存する
     const saveButton = () => {
