@@ -21,30 +21,15 @@ export const Title = () => {
         }
     },[]);
 
-    //「つづきから」ボタン押下時はゲーム画面を表示する
-    useEffect (() => {
-        if(page === "title" && flag === true){
-            navigate('/game', {state: {fromTitle: true}});
-        }
-    },[flag]);
-
     //「はじめから」ボタン押下でgame1ページに遷移
     const startButton = () => {
-        setPageNum(0);
-        navigate('/game', {state: {fromTitle: true}});
+        navigate('/game', {state: {fromTitle: true, fromButton: "start"}});
     };
 
     //cookieを取得する
     //「つづきから」ボタン押下で保存したgameページに遷移
     const continueButton = () => {
-        const cookies = document.cookie.split("; ");
-        for (let cookie of cookies) {
-            const [key, value] = cookie.split("=");
-            if (key === "page") {
-                setFlag(true);
-                setPageNum(parseInt(value));
-            }
-        }
+        navigate('/game', {state: {fromTitle: true, fromButton: "cont"}});
     };
     
     //タイトル画面表示

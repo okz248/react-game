@@ -28,24 +28,25 @@ export const Game = () => {
     const location = useLocation();
     const navigate = useNavigate();
 
-    //ボタンで遷移してきたかの判定
+    //初期設定
     useEffect(() => {
-        if(!location.state || !(location.state as any).fromTitle){
+        if(!location.state || location.state?.fromTitle !== true){
+            //ボタンからでなければタイトルへ遷移
             navigate("/title", {replace:true});
-        }
-    },[location.state, navigate]);
-
-    //cookieの存在確認
-    //cookieを取得して存在するならsaveをtrueにする
-    useEffect(() => {
-        const cookies = document.cookie.split("; ");
-        for(let cookie of cookies){
-            const [key, value] = cookie.split("=");
-            if (key === "page"){
-                setPageNum(parseInt(value));
+        }else if(location.state?.fromButton === "start"){
+            //はじめからを押したら1ページ目を設定
+            setPageNum(0);
+        }else{
+            //つづきからを押したら保存ページを設定
+            const cookies = document.cookie.split("; ");
+            for(let cookie of cookies){
+                const [key, value] = cookie.split("=");
+                if (key === "page"){
+                    setPageNum(parseInt(value));
+                }
             }
         }
-    },[]);
+    },[location.state, navigate]);
 
     //cookieを保存する
     const saveButton = () => {
