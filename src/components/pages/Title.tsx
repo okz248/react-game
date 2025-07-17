@@ -3,9 +3,7 @@ import { Navi } from "../Navi";
 import { useNavigate } from "react-router-dom";
 
 export const Title = () => {
-    const [, setPageNum] = useState(0);
     const [page,] = useState("title");
-    const [flag, setFlag] = useState(false);
     const [save, setSave] = useState(false);
     const navigate = useNavigate();
 
