@@ -3,9 +3,10 @@ import { Navi } from "../Navi";
 import { useNavigate } from "react-router-dom";
 
 export const Title = () => {
-    const [page,] = useState("title");
+    const page = "title";
     const [save, setSave] = useState(false);
     const navigate = useNavigate();
+    const [img, setImg] = useState(undefined);
 
     //cookieの存在確認
     //cookieを取得して存在するならsaveをtrueにする
@@ -17,6 +18,14 @@ export const Title = () => {
                 setSave(true);
             }
         }
+        fetch('https://ramen-api.dev/shops/yoshimuraya')
+        .then(response => response.json())
+        .then(data => {
+            setImg(data.shop.photos[0].url);
+        })
+        .catch(error => {
+            console.error('リクエストエラー:', error);
+        });
     },[]);
 
     //「はじめから」ボタン押下でgame1ページに遷移
@@ -36,6 +45,11 @@ export const Title = () => {
             <>
                 <div>
                     <ul><li>ゲームタイトル</li></ul>
+                    {
+                        img && (
+                            <img src={img} width={200} height={150}/>
+                        )
+                    }
                     <ul>
                         <a href="https://www.irasutoya.com/">素材：いらすとや</a>
                     </ul>
