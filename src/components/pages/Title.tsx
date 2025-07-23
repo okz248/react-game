@@ -7,6 +7,14 @@ export const Title = () => {
     const [save, setSave] = useState(false);
     const navigate = useNavigate();
     const [img, setImg] = useState(undefined);
+    const [title, setTitle] = useState("");
+    const [button, setButton] = useState({
+        start_button: "",
+        continue_button: "",
+        next_button: "",
+        back_button: "",
+        save_button: ""
+    });
 
     //cookieの存在確認
     //cookieを取得して存在するならsaveをtrueにする
@@ -18,6 +26,7 @@ export const Title = () => {
                 setSave(true);
             }
         }
+        //APIを使って画像を取得、表示する
         fetch('https://ramen-api.dev/shops/yoshimuraya')
         .then(response => response.json())
         .then(data => {
@@ -25,6 +34,28 @@ export const Title = () => {
         })
         .catch(error => {
             console.error('リクエストエラー:', error);
+        });
+    },[]);
+
+    //CMSをAPIを使って連携し、ボタンの名前を設定する
+    useEffect(() => {
+        fetch('https://rs202507.microcms.io/api/v1/get_content',
+        {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-MICROCMS-API-KEY': `a7AcOGonywnBhzehhS2gQCbxoZDE4fnNWZ5F`
+                },
+        }
+        )
+        .then(response => response.json())
+        .then((res) => {
+            console.log(res);
+            setButton(res);
+            setTitle(res.title_GameTitle);
+        })
+        .catch(() => {
+            alert();
         });
     },[]);
 
@@ -44,7 +75,7 @@ export const Title = () => {
         return (
             <>
                 <div>
-                    <ul><li>ゲームタイトル</li></ul>
+                    <ul><li>{title}</li></ul>
                     {
                         img && (
                             <img src={img} width={200} height={150}/>
@@ -55,7 +86,7 @@ export const Title = () => {
                     </ul>
                 </div>
                 <div>
-                    <Navi page={page} save={save} startButton={startButton} continueButton={continueButton} />
+                    <Navi button={button} page={page} save={save} startButton={startButton} continueButton={continueButton} />
                 </div>
             </>
         );

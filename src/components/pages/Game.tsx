@@ -27,6 +27,13 @@ export const Game = () => {
     const [pageNum, setPageNum] = useState(0);
     const location = useLocation();
     const navigate = useNavigate();
+    const [button, setButton] = useState({
+        start_button: "",
+        continue_button: "",
+        next_button: "",
+        back_button: "",
+        save_button: ""
+    });
 
     //初期設定
     useEffect(() => {
@@ -47,6 +54,27 @@ export const Game = () => {
             }
         }
     },[location.state, navigate]);
+
+    //CMSをAPIを使って連携し、ボタンの名前を設定する
+    useEffect(() => {
+        fetch('https://rs202507.microcms.io/api/v1/get_content',
+        {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-MICROCMS-API-KEY': `a7AcOGonywnBhzehhS2gQCbxoZDE4fnNWZ5F`
+                },
+        }
+        )
+        .then(response => response.json())
+        .then((res) => {
+            console.log(res)
+            setButton(res)
+        })
+        .catch(() => {
+            alert();
+        });
+    },[]);
 
     //cookieを保存する
     const saveButton = () => {
@@ -75,7 +103,7 @@ export const Game = () => {
             <div>いらすとちゃん</div>
             {/* <!-- セリフ --> */}
             <Message pageNum={pageNum} txtlist={txtlist} />
-            <Navi nextButton={nextButton} backButton={backButton} saveButton={saveButton}/>
+            <Navi button={button} nextButton={nextButton} backButton={backButton} saveButton={saveButton}/>
         </div>
     );
 };
