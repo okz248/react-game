@@ -39,12 +39,12 @@ export const Title = () => {
 
     //CMSをAPIを使って連携し、ボタンの名前を設定する
     useEffect(() => {
-        fetch('https://rs202507.microcms.io/api/v1/get_content',
+        fetch(process.env.REACT_APP_CMS_API_URL,
         {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'X-MICROCMS-API-KEY': `a7AcOGonywnBhzehhS2gQCbxoZDE4fnNWZ5F`
+                'X-MICROCMS-API-KEY': process.env.REACT_APP_CMS_API_KEY
                 },
         }
         )
