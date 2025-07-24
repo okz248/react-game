@@ -2,6 +2,10 @@ import { useEffect, useState } from "react";
 import { Navi } from "../Navi";
 import { useNavigate } from "react-router-dom";
 
+// API（CMS）
+const apiCmsUrl = import.meta.env.VITE_CMS_API_URL ?? "";
+const apiCmsKey = import.meta.env.VITE_CMS_API_KEY ?? "";
+
 export const Title = () => {
     const page = "title";
     const [save, setSave] = useState(false);
@@ -39,12 +43,12 @@ export const Title = () => {
 
     //CMSをAPIを使って連携し、ボタンの名前を設定する
     useEffect(() => {
-        fetch(process.env.REACT_APP_CMS_API_URL,
+        fetch(apiCmsUrl,
         {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'X-MICROCMS-API-KEY': process.env.REACT_APP_CMS_API_KEY
+                'X-MICROCMS-API-KEY': apiCmsKey
                 },
         }
         )

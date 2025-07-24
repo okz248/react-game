@@ -4,6 +4,10 @@ import { Message } from "../Message";
 import { Navi } from "../Navi";
 import { useLocation, useNavigate } from "react-router-dom";
 
+// API（CMS）
+const apiCmsUrl = import.meta.env.VITE_CMS_API_URL ?? "";
+const apiCmsKey = import.meta.env.VITE_CMS_API_KEY ?? "";
+
 //表示テキストリスト
 const txtlist = [
     "「ここにセリフが表示されます。」", 
@@ -57,12 +61,12 @@ export const Game = () => {
 
     //CMSをAPIを使って連携し、ボタンの名前を設定する
     useEffect(() => {
-        fetch(process.env.REACT_APP_CMS_API_URL,
+        fetch(apiCmsUrl,
         {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-                'X-MICROCMS-API-KEY': process.env.REACT_APP_CMS_API_KEY
+                'X-MICROCMS-API-KEY': apiCmsKey
                 },
         }
         )
