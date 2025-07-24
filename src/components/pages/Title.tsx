@@ -15,6 +15,7 @@ export const Title = () => {
     const [button, setButton] = useState({
         start_button: "",
         continue_button: "",
+        enter_button: "",
         next_button: "",
         back_button: "",
         save_button: ""
@@ -63,12 +64,11 @@ export const Title = () => {
         });
     },[]);
 
-    //「はじめから」ボタン押下でgame1ページに遷移
+    //「はじめから」ボタン押下でsettingページに遷移
     const startButton = () => {
-        navigate('/game', {state: {fromTitle: true, fromButton: "start"}});
+        navigate('/setting', {state: {fromTitle: true, fromButton: "start"}});
     };
 
-    //cookieを取得する
     //「つづきから」ボタン押下で保存したgameページに遷移
     const continueButton = () => {
         navigate('/game', {state: {fromTitle: true, fromButton: "cont"}});

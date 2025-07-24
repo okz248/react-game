@@ -34,6 +34,7 @@ export const Game = () => {
     const [button, setButton] = useState({
         start_button: "",
         continue_button: "",
+        enter_button: "",
         next_button: "",
         back_button: "",
         save_button: ""
@@ -44,8 +45,8 @@ export const Game = () => {
         if(!location.state || location.state?.fromTitle !== true){
             //ボタンからでなければタイトルへ遷移
             navigate("/title", {replace:true});
-        }else if(location.state?.fromButton === "start"){
-            //はじめからを押したら1ページ目を設定
+        }else if(location.state?.fromButton === "set"){
+            //決定を押したら1ページ目を設定
             setPageNum(0);
         }else{
             //つづきからを押したら保存ページを設定
