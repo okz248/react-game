@@ -39,9 +39,7 @@ export const Navi: FC<Props> = (props) => {
     );
   }else if(page === "setting"){
     return(
-      <>
-        <button onClick={enterButton}>{button.enter_button}</button>
-      </>
+      <button type="submit" onClick={enterButton}>{button.enter_button}</button>
     );
   }
   return (

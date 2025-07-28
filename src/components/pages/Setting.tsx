@@ -1,15 +1,17 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { Navi } from "../Navi";
 import { useEffect, useState } from "react";
+import { connect, useDispatch } from "react-redux";
+import { action } from "../../actions/Action";
 
 // API（CMS）
 const apiCmsUrl = import.meta.env.VITE_CMS_API_URL ?? "";
 const apiCmsKey = import.meta.env.VITE_CMS_API_KEY ?? "";
 
-export const Setting = () => {
+const Setting = () => {
     const page = "setting";
-    const navigate = useNavigate();
     const location = useLocation();
+    const navigate = useNavigate();
     const [button, setButton] = useState({
         start_button: "",
         continue_button: "",
@@ -17,6 +19,11 @@ export const Setting = () => {
         next_button: "",
         back_button: "",
         save_button: ""
+    });
+    const dispatch = useDispatch();
+    const [formData, setFormData] = useState({
+        name: '',
+        email: ''
     });
 
     //初期設定
@@ -48,21 +55,29 @@ export const Setting = () => {
         });
     },[]);
 
+    const onChange = (e: any) => {
+        setFormData({
+          ...formData,
+          [e.target.name]: e.target.value
+        });
+      };
+
     //「enterButton」ボタン押下でgame1ページに遷移
     const enterButton = () => {
+        dispatch(action());
         navigate('/game', {state: {fromTitle: true, fromButton: "set"}});
     };
 
     return(
-        <>
-            <div>
-                <ul><input type="text" placeholder="名前を入力してください" /></ul>
-                <label><input type="radio" name="gender" />男性</label>
-                <label><input type="radio" name="gender" />女性</label>
-            </div>
-            <div>
+        <div>
+            <form onSubmit={enterButton}>
+                <input type="text" placeholder="名前を入力してください" onChange={onChange} /><br/>
+                <label><input type="radio" name="gender" onChange={onChange} />男性</label>
+                <label><input type="radio" name="gender" onChange={onChange} />女性</label><br/>
                 <Navi button={button} page={page} enterButton={enterButton} />
-            </div>
-        </>
+            </form>
+        </div>
     );
 };
+
+export default connect()(Setting)

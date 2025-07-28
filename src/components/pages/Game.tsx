@@ -42,15 +42,19 @@ export const Game = () => {
 
     //初期設定
     useEffect(() => {
+        console.log("location.state:", location.state);
         if(!location.state || location.state?.fromTitle !== true){
             //ボタンからでなければタイトルへ遷移
             navigate("/title", {replace:true});
-        }else if(location.state?.fromButton === "set"){
+            return;
+        }
+        
+        if(location.state?.fromButton === "set"){
             //決定を押したら1ページ目を設定
             setPageNum(0);
         }else{
             //つづきからを押したら保存ページを設定
-            const cookies = document.cookie.split("; ");
+            const cookies = document.cookie.split(";");
             for(let cookie of cookies){
                 const [key, value] = cookie.split("=");
                 if (key === "page"){
