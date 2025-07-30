@@ -1,14 +1,14 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { Navi } from "../Navi";
-import { useEffect, useState } from "react";
-import { connect, useDispatch } from "react-redux";
-import { action } from "../../actions/Action";
+import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
+import { useDispatch } from "react-redux";
+import { Action } from "../../actions/Action";
 
 // API（CMS）
 const apiCmsUrl = import.meta.env.VITE_CMS_API_URL ?? "";
 const apiCmsKey = import.meta.env.VITE_CMS_API_KEY ?? "";
 
-const Setting = () => {
+export const Setting = () => {
     const page = "setting";
     const location = useLocation();
     const navigate = useNavigate();
@@ -21,9 +21,9 @@ const Setting = () => {
         save_button: ""
     });
     const dispatch = useDispatch();
-    const [formData, setFormData] = useState({
-        name: '',
-        email: ''
+    const [form, setForm] = useState({
+        name: "",
+        gender: ""
     });
 
     //初期設定
@@ -55,29 +55,28 @@ const Setting = () => {
         });
     },[]);
 
-    const onChange = (e: any) => {
-        setFormData({
-          ...formData,
-          [e.target.name]: e.target.value
-        });
-      };
+    const changeName = (e: ChangeEvent<HTMLInputElement>) => {
+        setForm({...form, name: e.target.value});
+    };
+    const changeGender = (e: ChangeEvent<HTMLInputElement>) => {
+        setForm({...form, gender: e.target.value});
+    };
 
     //「enterButton」ボタン押下でgame1ページに遷移
-    const enterButton = () => {
-        dispatch(action());
+    const enterButton = (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        dispatch(Action(form.name, form.gender));
         navigate('/game', {state: {fromTitle: true, fromButton: "set"}});
     };
 
     return(
         <div>
             <form onSubmit={enterButton}>
-                <input type="text" placeholder="名前を入力してください" onChange={onChange} /><br/>
-                <label><input type="radio" name="gender" onChange={onChange} />男性</label>
-                <label><input type="radio" name="gender" onChange={onChange} />女性</label><br/>
-                <Navi button={button} page={page} enterButton={enterButton} />
+                <input type="text" placeholder="名前を入力してください" value={form.name} onChange={changeName} /><br/>
+                <label><input type="radio" name="gender" value="male" onChange={changeGender} />男性</label>
+                <label><input type="radio" name="gender" value="female" onChange={changeGender} />女性</label><br/>
+                <Navi button={button} page={page}/>
             </form>
         </div>
     );
 };
-
-export default connect()(Setting)

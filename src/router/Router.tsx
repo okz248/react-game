@@ -1,7 +1,8 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import { Title } from "../components/pages/Title";
 import { Game } from "../components/pages/Game";
-import Setting from "../components/pages/Setting";
+import { Setting } from "../components/pages/Setting";
+
 
 export const Router = () => {
     return (

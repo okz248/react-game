@@ -17,14 +17,13 @@ type Props = {
     save?: boolean;
     startButton?: () => void;
     continueButton?: () => void;
-    enterButton?: () => void;
     nextButton?: () => void;
     backButton?: () => void;
     saveButton?: () => void;
   };
 
 export const Navi: FC<Props> = (props) => {
-    const {button, page, save, startButton, continueButton, enterButton, nextButton, backButton, saveButton} = props;
+    const {button, page, save, startButton, continueButton, nextButton, backButton, saveButton} = props;
   //ゲーム画面表示
   if(page === "title"){
     return (
@@ -39,7 +38,7 @@ export const Navi: FC<Props> = (props) => {
     );
   }else if(page === "setting"){
     return(
-      <button type="submit" onClick={enterButton}>{button.enter_button}</button>
+      <button type="submit">{button.enter_button}</button>
     );
   }
   return (
