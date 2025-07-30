@@ -1,0 +1,82 @@
+import { useLocation, useNavigate } from "react-router-dom";
+import { Navi } from "../Navi";
+import { useEffect, useState, type ChangeEvent, type FormEvent } from "react";
+import { useDispatch } from "react-redux";
+import { Action } from "../../actions/Action";
+
+// API（CMS）
+const apiCmsUrl = import.meta.env.VITE_CMS_API_URL ?? "";
+const apiCmsKey = import.meta.env.VITE_CMS_API_KEY ?? "";
+
+export const Setting = () => {
+    const page = "setting";
+    const location = useLocation();
+    const navigate = useNavigate();
+    const [button, setButton] = useState({
+        start_button: "",
+        continue_button: "",
+        enter_button: "",
+        next_button: "",
+        back_button: "",
+        save_button: ""
+    });
+    const dispatch = useDispatch();
+    const [form, setForm] = useState({
+        name: "",
+        gender: ""
+    });
+
+    //初期設定
+    useEffect(() => {
+        if(!location.state || location.state?.fromTitle !== true){
+            //ボタンからでなければタイトルへ遷移
+            navigate("/title", {replace:true});
+        }
+    },[]);
+
+    //CMSをAPIを使って連携し、ボタンの名前を設定する
+    useEffect(() => {
+        fetch(apiCmsUrl,
+        {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-MICROCMS-API-KEY': apiCmsKey
+                },
+        }
+        )
+        .then(response => response.json())
+        .then((res) => {
+            console.log(res);
+            setButton(res);
+        })
+        .catch(() => {
+            alert();
+        });
+    },[]);
+
+    const changeName = (e: ChangeEvent<HTMLInputElement>) => {
+        setForm({...form, name: e.target.value});
+    };
+    const changeGender = (e: ChangeEvent<HTMLInputElement>) => {
+        setForm({...form, gender: e.target.value});
+    };
+
+    //「enterButton」ボタン押下でgame1ページに遷移
+    const enterButton = (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        dispatch(Action(form.name, form.gender));
+        navigate('/game', {state: {fromTitle: true, fromButton: "set"}});
+    };
+
+    return(
+        <div>
+            <form onSubmit={enterButton}>
+                <input type="text" placeholder="名前を入力してください" value={form.name} onChange={changeName} /><br/>
+                <label><input type="radio" name="gender" value="male" onChange={changeGender} />男性</label>
+                <label><input type="radio" name="gender" value="female" onChange={changeGender} />女性</label><br/>
+                <Navi button={button} page={page}/>
+            </form>
+        </div>
+    );
+};

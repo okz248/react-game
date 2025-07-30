@@ -1,8 +1,18 @@
 import type { FC } from "react";
 
-type PageType = "title" | "game";
+type PageType = "title" | "setting" | "game";
+
+type Button = {
+  start_button: string;
+  continue_button: string;
+  enter_button: string;
+  next_button: string;
+  back_button: string;
+  save_button: string;
+};
 
 type Props = {
+    button: Button;
     page?: PageType;
     save?: boolean;
     startButton?: () => void;
@@ -13,25 +23,29 @@ type Props = {
   };
 
 export const Navi: FC<Props> = (props) => {
-    const {page, save, startButton, continueButton, nextButton, backButton, saveButton} = props;
+    const {button, page, save, startButton, continueButton, nextButton, backButton, saveButton} = props;
   //ゲーム画面表示
   if(page === "title"){
     return (
       <>
-        <button onClick={startButton}>はじめから</button>
+        <button onClick={startButton}>{button.start_button}</button>
         {
           save && (
-            <button onClick={continueButton}>つづきから</button>
+            <button onClick={continueButton}>{button.continue_button}</button>
           )
         }
       </>
     );
+  }else if(page === "setting"){
+    return(
+      <button type="submit">{button.enter_button}</button>
+    );
   }
   return (
     <>
-        <button onClick={nextButton}>次へ</button>
-        <button onClick={backButton}>戻る</button>
-        <button onClick={saveButton}>セーブ</button>
+        <button onClick={nextButton}>{button.next_button}</button>
+        <button onClick={backButton}>{button.back_button}</button>
+        <button onClick={saveButton}>{button.save_button}</button>
     </>
   );
 };

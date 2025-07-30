@@ -2,11 +2,24 @@ import { useEffect, useState } from "react";
 import { Navi } from "../Navi";
 import { useNavigate } from "react-router-dom";
 
+// API（CMS）
+const apiCmsUrl = import.meta.env.VITE_CMS_API_URL ?? "";
+const apiCmsKey = import.meta.env.VITE_CMS_API_KEY ?? "";
+
 export const Title = () => {
     const page = "title";
     const [save, setSave] = useState(false);
     const navigate = useNavigate();
     const [img, setImg] = useState(undefined);
+    const [title, setTitle] = useState("");
+    const [button, setButton] = useState({
+        start_button: "",
+        continue_button: "",
+        enter_button: "",
+        next_button: "",
+        back_button: "",
+        save_button: ""
+    });
 
     //cookieの存在確認
     //cookieを取得して存在するならsaveをtrueにする
@@ -18,6 +31,7 @@ export const Title = () => {
                 setSave(true);
             }
         }
+        //APIを使って画像を取得、表示する
         fetch('https://ramen-api.dev/shops/yoshimuraya')
         .then(response => response.json())
         .then(data => {
@@ -28,12 +42,33 @@ export const Title = () => {
         });
     },[]);
 
-    //「はじめから」ボタン押下でgame1ページに遷移
+    //CMSをAPIを使って連携し、ボタンの名前を設定する
+    useEffect(() => {
+        fetch(apiCmsUrl,
+        {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-MICROCMS-API-KEY': apiCmsKey
+                },
+        }
+        )
+        .then(response => response.json())
+        .then((res) => {
+            console.log(res);
+            setButton(res);
+            setTitle(res.title_GameTitle);
+        })
+        .catch(() => {
+            alert();
+        });
+    },[]);
+
+    //「はじめから」ボタン押下でsettingページに遷移
     const startButton = () => {
-        navigate('/game', {state: {fromTitle: true, fromButton: "start"}});
+        navigate('/setting', {state: {fromTitle: true, fromButton: "start"}});
     };
 
-    //cookieを取得する
     //「つづきから」ボタン押下で保存したgameページに遷移
     const continueButton = () => {
         navigate('/game', {state: {fromTitle: true, fromButton: "cont"}});
@@ -44,7 +79,7 @@ export const Title = () => {
         return (
             <>
                 <div>
-                    <ul><li>ゲームタイトル</li></ul>
+                    <ul><li>{title}</li></ul>
                     {
                         img && (
                             <img src={img} width={200} height={150}/>
@@ -55,7 +90,7 @@ export const Title = () => {
                     </ul>
                 </div>
                 <div>
-                    <Navi page={page} save={save} startButton={startButton} continueButton={continueButton} />
+                    <Navi button={button} page={page} save={save} startButton={startButton} continueButton={continueButton} />
                 </div>
             </>
         );

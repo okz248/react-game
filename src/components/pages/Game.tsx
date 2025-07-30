@@ -3,6 +3,12 @@ import { Image } from "../Image";
 import { Message } from "../Message";
 import { Navi } from "../Navi";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import type { NameType } from "../../store";
+
+// API（CMS）
+const apiCmsUrl = import.meta.env.VITE_CMS_API_URL ?? "";
+const apiCmsKey = import.meta.env.VITE_CMS_API_KEY ?? "";
 
 //表示テキストリスト
 const txtlist = [
@@ -27,30 +33,81 @@ export const Game = () => {
     const [pageNum, setPageNum] = useState(0);
     const location = useLocation();
     const navigate = useNavigate();
+    const [button, setButton] = useState({
+        start_button: "",
+        continue_button: "",
+        enter_button: "",
+        next_button: "",
+        back_button: "",
+        save_button: ""
+    });
+    const storeName = useSelector((state: NameType) => state.name);
+    const storeGender = useSelector((state: NameType) => state.gender);
+    const [userName, setUserName] = useState("");
+    const [gender, setGender] = useState("");
 
     //初期設定
     useEffect(() => {
+        console.log("location.state:", location.state);
         if(!location.state || location.state?.fromTitle !== true){
             //ボタンからでなければタイトルへ遷移
             navigate("/title", {replace:true});
-        }else if(location.state?.fromButton === "start"){
-            //はじめからを押したら1ページ目を設定
+            return;
+        }
+        
+        if(location.state?.fromButton === "set"){
+            //決定を押したら1ページ目を設定
             setPageNum(0);
+            setUserName(storeName);
+            setGender(storeGender);
+            console.log(storeGender);
         }else{
             //つづきからを押したら保存ページを設定
-            const cookies = document.cookie.split("; ");
+            const cookies = document.cookie.split(";");
             for(let cookie of cookies){
-                const [key, value] = cookie.split("=");
+                const [rawKey, rawValue] = cookie.split("=");
+                //空白除去
+                const key = rawKey.trim();
+                //null|undefined対策
+                const value = rawValue?.trim();
                 if (key === "page"){
                     setPageNum(parseInt(value));
+                }else if(key === "userName"){
+                    setUserName(value);
+                }else if(key === "gender"){
+                    setGender(value);
+                    console.log(value);
                 }
             }
         }
     },[location.state, navigate]);
 
+    //CMSをAPIを使って連携し、ボタンの名前を設定する
+    useEffect(() => {
+        fetch(apiCmsUrl,
+        {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-MICROCMS-API-KEY': apiCmsKey
+                },
+        }
+        )
+        .then(response => response.json())
+        .then((res) => {
+            console.log(res)
+            setButton(res)
+        })
+        .catch(() => {
+            alert();
+        });
+    },[]);
+
     //cookieを保存する
     const saveButton = () => {
         document.cookie = "page=" + pageNum;
+        document.cookie = "userName=" + userName;
+        document.cookie = "gender=" + gender;
     };
 
     //「次へ」ボタン押下でページ番号更新
@@ -72,10 +129,10 @@ export const Game = () => {
         <div>
             <Image pageNum={pageNum} imglist={imglist} />
             {/* <!-- キャラクター名 --> */}
-            <div>いらすとちゃん</div>
+            <div>{userName}</div>
             {/* <!-- セリフ --> */}
             <Message pageNum={pageNum} txtlist={txtlist} />
-            <Navi nextButton={nextButton} backButton={backButton} saveButton={saveButton}/>
+            <Navi button={button} nextButton={nextButton} backButton={backButton} saveButton={saveButton}/>
         </div>
     );
 };
